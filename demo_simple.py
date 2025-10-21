@@ -1,13 +1,10 @@
 """
-Demonstração de uso da biblioteca Chemometrics reorganizada.
-
-Este script mostra como usar a nova estrutura modular para análise quimiométrica.
+Demonstração simples da biblioteca Chemometrics (sem plots).
 """
 
 import sys
 import os
 import numpy as np
-import pandas as pd
 import logging
 
 # Adicionar o diretório atual ao path
@@ -40,19 +37,19 @@ def demonstrate_preprocessing():
     
     # 1. Savitzky-Golay
     print("\n1. Aplicando Savitzky-Golay...")
-    savgol = SavitzkyGolayPreprocessor(window_length=15, polyorder=2, deriv=1)
+    savgol = SavitzkyGolayPreprocessor(window_length=15, polyorder=2, deriv=1, plot=False)
     X_savgol = savgol.fit_transform(X)
     print(f"   Dados após Savitzky-Golay: {X_savgol.shape}")
     
     # 2. SNV
     print("\n2. Aplicando SNV...")
-    snv = SNVPreprocessor()
+    snv = SNVPreprocessor(plot=False)
     X_snv = snv.fit_transform(X_savgol)
     print(f"   Dados após SNV: {X_snv.shape}")
     
     # 3. Mean Centering
     print("\n3. Aplicando Mean Centering...")
-    mean_center = MeanCenterPreprocessor()
+    mean_center = MeanCenterPreprocessor(plot=False)
     X_final = mean_center.fit_transform(X_snv)
     print(f"   Dados finais: {X_final.shape}")
     

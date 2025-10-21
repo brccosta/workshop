@@ -206,8 +206,8 @@ class PLSRegressor:
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
         
         # Gráfico Predito vs Real
-        ax1.scatter(y_cal, y_cal_pred, alpha=0.7, label='Calibração', color='blue', s=50)
-        ax1.scatter(y_test, y_test_pred, alpha=0.7, label='Teste', color='red', s=50)
+        ax1.scatter(y_cal.ravel(), y_cal_pred.ravel(), alpha=0.7, label='Calibração', color='blue', s=50)
+        ax1.scatter(y_test.ravel(), y_test_pred.ravel(), alpha=0.7, label='Teste', color='red', s=50)
         
         # Linha de referência
         min_val = min(np.min(y_cal), np.min(y_test), np.min(y_cal_pred), np.min(y_test_pred))
@@ -221,11 +221,11 @@ class PLSRegressor:
         ax1.grid(True, alpha=0.3)
         
         # Gráfico de Resíduos
-        residuals_cal = y_cal - y_cal_pred
-        residuals_test = y_test - y_test_pred
+        residuals_cal = y_cal.ravel() - y_cal_pred.ravel()
+        residuals_test = y_test.ravel() - y_test_pred.ravel()
         
-        ax2.scatter(y_cal_pred, residuals_cal, alpha=0.7, label='Calibração', color='blue', s=50)
-        ax2.scatter(y_test_pred, residuals_test, alpha=0.7, label='Teste', color='red', s=50)
+        ax2.scatter(y_cal_pred.ravel(), residuals_cal, alpha=0.7, label='Calibração', color='blue', s=50)
+        ax2.scatter(y_test_pred.ravel(), residuals_test, alpha=0.7, label='Teste', color='red', s=50)
         ax2.axhline(y=0, color='k', linestyle='--', alpha=0.8, linewidth=2)
         
         ax2.set_xlabel(f'Predito ({unit})')
@@ -311,14 +311,15 @@ class PLSRegressor:
         # Criar DataFrame
         df_results = pd.DataFrame({
             'conjunto': ['calibração'] * len(y_cal) + ['teste'] * len(y_test),
-            'y_real': np.concatenate([y_cal, y_test]),
-            'y_predito': np.concatenate([y_cal_pred, y_test_pred]),
+            'y_real': np.concatenate([y_cal.ravel(), y_test.ravel()]),
+            'y_predito': np.concatenate([y_cal_pred.ravel(), y_test_pred.ravel()]),
             'erro_absoluto': np.abs(np.concatenate([
-                y_cal - y_cal_pred, y_test - y_test_pred
+                (y_cal.ravel() - y_cal_pred.ravel()), 
+                (y_test.ravel() - y_test_pred.ravel())
             ])),
             'erro_percentual': np.abs(np.concatenate([
-                np.where(y_cal != 0, (y_cal - y_cal_pred) / y_cal * 100, 0),
-                np.where(y_test != 0, (y_test - y_test_pred) / y_test * 100, 0)
+                np.where(y_cal.ravel() != 0, (y_cal.ravel() - y_cal_pred.ravel()) / y_cal.ravel() * 100, 0),
+                np.where(y_test.ravel() != 0, (y_test.ravel() - y_test_pred.ravel()) / y_test.ravel() * 100, 0)
             ]))
         })
         
