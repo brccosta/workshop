@@ -41,14 +41,14 @@ Python/v2/
 ```
 
 **Características da V2:**
-- **Arquitetura modular** com separação clara de responsabilidades
+- **Arquitetura modular** com separação clara de responsabilidades (`chemometrics/__init__.py`)
   ```python
   # Separação clara: cada módulo tem responsabilidade específica
   from chemometrics.preprocessing import SNVPreprocessor
   from chemometrics.modeling import PLSRegressor
   from chemometrics.utils import DataSplitter
   ```
-- **Classes orientadas a objetos** com interfaces consistentes
+- **Classes orientadas a objetos** com interfaces consistentes (`chemometrics/preprocessing.py`)
   ```python
   # Interface consistente: todos os preprocessadores seguem o mesmo padrão
   snv = SNVPreprocessor(plot=True)
@@ -57,13 +57,13 @@ Python/v2/
   savgol = SavitzkyGolayPreprocessor(window_length=15, polyorder=2, deriv=1)
   X_processed = savgol.fit_transform(X_processed)
   ```
-- **Baixo acoplamento** entre módulos
+- **Baixo acoplamento** entre módulos (`chemometrics/__init__.py`)
   ```python
   # Módulos independentes: mudança em um não afeta outros
   from chemometrics import PLSRegressor, SNVPreprocessor, DataSplitter
   # Cada classe é independente e pode ser usada isoladamente
   ```
-- **Parâmetros configuráveis** e flexíveis
+- **Parâmetros configuráveis** e flexíveis (`chemometrics/preprocessing.py`)
   ```python
   # Flexibilidade total: parâmetros configuráveis em tempo de execução
   preprocessor = SavitzkyGolayPreprocessor(
@@ -73,7 +73,7 @@ Python/v2/
       plot=True           # Configurável
   )
   ```
-- **Documentação completa** com docstrings
+- **Documentação completa** com docstrings (`sodium_analysis.py`)
   ```python
   def load_data(file_path: str = "data/dados.xlsx") -> tuple:
       """
@@ -90,7 +90,7 @@ Python/v2/
           X, y, amostras, variaveis
       """
   ```
-- **Alta reutilização** de componentes
+- **Alta reutilização** de componentes (`chemometrics/__init__.py`)
   ```python
   # Reutilização: mesma biblioteca para diferentes projetos
   # Projeto de proteínas
