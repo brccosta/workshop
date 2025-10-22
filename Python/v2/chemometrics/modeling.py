@@ -4,6 +4,7 @@ Módulo de modelagem quimiométrica. Teste de Workshop
 Modificação 1
 Modificação 2
 Modificação 3
+Modificação 4
 
 """
 
