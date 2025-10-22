@@ -42,11 +42,66 @@ Python/v2/
 
 **Características da V2:**
 - **Arquitetura modular** com separação clara de responsabilidades
+  ```python
+  # Separação clara: cada módulo tem responsabilidade específica
+  from chemometrics.preprocessing import SNVPreprocessor
+  from chemometrics.modeling import PLSRegressor
+  from chemometrics.utils import DataSplitter
+  ```
 - **Classes orientadas a objetos** com interfaces consistentes
+  ```python
+  # Interface consistente: todos os preprocessadores seguem o mesmo padrão
+  snv = SNVPreprocessor(plot=True)
+  X_processed = snv.fit_transform(X)
+  
+  savgol = SavitzkyGolayPreprocessor(window_length=15, polyorder=2, deriv=1)
+  X_processed = savgol.fit_transform(X_processed)
+  ```
 - **Baixo acoplamento** entre módulos
+  ```python
+  # Módulos independentes: mudança em um não afeta outros
+  from chemometrics import PLSRegressor, SNVPreprocessor, DataSplitter
+  # Cada classe é independente e pode ser usada isoladamente
+  ```
 - **Parâmetros configuráveis** e flexíveis
+  ```python
+  # Flexibilidade total: parâmetros configuráveis em tempo de execução
+  preprocessor = SavitzkyGolayPreprocessor(
+      window_length=21,    # Configurável
+      polyorder=3,         # Configurável
+      deriv=2,             # Configurável
+      plot=True           # Configurável
+  )
+  ```
 - **Documentação completa** com docstrings
+  ```python
+  def load_data(file_path: str = "data/dados.xlsx") -> tuple:
+      """
+      Carrega os dados do arquivo Excel.
+      
+      Parameters
+      ----------
+      file_path : str
+          Caminho para o arquivo de dados.
+          
+      Returns
+      -------
+      tuple
+          X, y, amostras, variaveis
+      """
+  ```
 - **Alta reutilização** de componentes
+  ```python
+  # Reutilização: mesma biblioteca para diferentes projetos
+  # Projeto de proteínas
+  from chemometrics import SNVPreprocessor, PLSRegressor
+  
+  # Projeto de óleos  
+  from chemometrics import SavitzkyGolayPreprocessor, MSCPreprocessor
+  
+  # Projeto de alimentos
+  from chemometrics import MeanCenterPreprocessor, DataSplitter
+  ```
 
 ## Comparação Arquitetural
 
@@ -179,7 +234,3 @@ class SavitzkyGolayPreprocessor(BasePreprocessor):
 - **Extensão da biblioteca** com novos algoritmos
 - **Reutilização** em outros projetos de análise espectroscópica
 - **Integração** com outras bibliotecas científicas
-
-## Conclusão
-
-A V2 representa uma evolução significativa em termos de **boas práticas de desenvolvimento**, oferecendo uma arquitetura **modular**, **escalável** e **manutenível** que facilita tanto o desenvolvimento quanto a evolução do sistema.
