@@ -2,6 +2,43 @@
 
 Este programa realiza análise quimiométrica de dados espectrais para determinação de sódio em amostras, utilizando técnicas de pré-processamento espectroscópico e modelagem PLS (Partial Least Squares).
 
+## Instalação e Configuração
+
+### 1. Criar Ambiente Virtual
+
+Recomenda-se criar um ambiente virtual para isolar as dependências do projeto:
+
+```bash
+# Criar ambiente virtual
+python -m venv venv
+
+# Ativar ambiente virtual (Windows)
+venv\Scripts\activate
+
+# Ativar ambiente virtual (Linux/macOS)
+source venv/bin/activate
+```
+
+### 2. Instalar Dependências
+
+Após ativar o ambiente virtual, instale as dependências necessárias:
+
+```bash
+# Navegar para o diretório v2
+cd v2
+
+# Instalar dependências
+pip install -r requirements.txt
+```
+
+### 3. Verificar Instalação
+
+Para verificar se tudo foi instalado corretamente:
+
+```bash
+python -c "import numpy, pandas, sklearn, matplotlib, seaborn; print('Dependências instaladas com sucesso!')"
+```
+
 ## Estrutura do Projeto
 
 ### V1 - Implementação Inicial
