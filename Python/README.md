@@ -51,10 +51,10 @@ Python/v2/
 - **Classes orientadas a objetos** com interfaces consistentes (`chemometrics/preprocessing.py`)
   ```python
   # Interface consistente: todos os preprocessadores seguem o mesmo padrão
-  snv = SNVPreprocessor(plot=True)
+  snv = SNVPreprocessor(ddof=1, plot=True)
   X_processed = snv.fit_transform(X)
   
-  savgol = SavitzkyGolayPreprocessor(window_length=15, polyorder=2, deriv=1)
+  savgol = SavitzkyGolayPreprocessor(window_length=15, polyorder=2, deriv=1, plot=False)
   X_processed = savgol.fit_transform(X_processed)
   ```
 - **Baixo acoplamento** entre módulos (`chemometrics/__init__.py`)
