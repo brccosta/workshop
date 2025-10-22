@@ -44,9 +44,9 @@ Python/v2/
 - **Arquitetura modular** com separação clara de responsabilidades (`chemometrics/__init__.py`)
   ```python
   # Separação clara: cada módulo tem responsabilidade específica
-  from chemometrics.preprocessing import SNVPreprocessor
-  from chemometrics.modeling import PLSRegressor
-  from chemometrics.utils import DataSplitter
+  from .preprocessing import *
+  from .modeling import *
+  from .utils import *
   ```
 - **Classes orientadas a objetos** com interfaces consistentes (`sodium_analysis.py`)
   ```python
@@ -54,13 +54,25 @@ Python/v2/
   snv = SNVPreprocessor(plot=plot)
   X_processed = snv.fit_transform(X_processed)
   
-  savgol = SavitzkyGolayPreprocessor(window_length=15, polyorder=2, deriv=1, plot=plot)
+  savgol = SavitzkyGolayPreprocessor(
+      window_length=15, 
+      polyorder=2, 
+      deriv=1, 
+      plot=plot
+  )
   X_processed = savgol.fit_transform(X)
   ```
-- **Baixo acoplamento** entre módulos (`chemometrics/__init__.py`)
+- **Baixo acoplamento** entre módulos (`sodium_analysis.py`)
   ```python
   # Módulos independentes: mudança em um não afeta outros
-  from chemometrics import PLSRegressor, SNVPreprocessor, DataSplitter
+  from chemometrics import (
+      SNVPreprocessor, 
+      SavitzkyGolayPreprocessor, 
+      MeanCenterPreprocessor,
+      PLSRegressor,
+      DataSplitter,
+      MetricsCalculator
+  )
   # Cada classe é independente e pode ser usada isoladamente
   ```
 - **Parâmetros configuráveis** e flexíveis (`sodium_analysis.py`)
@@ -97,10 +109,10 @@ Python/v2/
   from chemometrics import SNVPreprocessor, PLSRegressor
   
   # Projeto de óleos  
-  from chemometrics import SavitzkyGolayPreprocessor, MSCPreprocessor
+  from chemometrics import SavitzkyGolayPreprocessor, MeanCenterPreprocessor
   
   # Projeto de alimentos
-  from chemometrics import MeanCenterPreprocessor, DataSplitter
+  from chemometrics import DataSplitter, MetricsCalculator
   ```
 
 ## Comparação Arquitetural
