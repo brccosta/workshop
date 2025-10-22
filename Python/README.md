@@ -63,14 +63,14 @@ Python/v2/
   from chemometrics import PLSRegressor, SNVPreprocessor, DataSplitter
   # Cada classe é independente e pode ser usada isoladamente
   ```
-- **Parâmetros configuráveis** e flexíveis (`chemometrics/preprocessing.py`)
+- **Parâmetros configuráveis** e flexíveis (`sodium_analysis.py`)
   ```python
   # Flexibilidade total: parâmetros configuráveis em tempo de execução
-  preprocessor = SavitzkyGolayPreprocessor(
-      window_length=21,    # Configurável
-      polyorder=3,         # Configurável
-      deriv=2,             # Configurável
-      plot=True           # Configurável
+  savgol = SavitzkyGolayPreprocessor(
+      window_length=15,    # Configurável
+      polyorder=2,         # Configurável
+      deriv=1,             # Configurável
+      plot=plot           # Configurável
   )
   ```
 - **Documentação completa** com docstrings (`sodium_analysis.py`)
@@ -90,7 +90,7 @@ Python/v2/
           X, y, amostras, variaveis
       """
   ```
-- **Alta reutilização** de componentes (`chemometrics/__init__.py`)
+- **Alta reutilização** de componentes (`sodium_analysis.py`)
   ```python
   # Reutilização: mesma biblioteca para diferentes projetos
   # Projeto de proteínas
