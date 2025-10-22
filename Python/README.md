@@ -283,14 +283,13 @@ class SavitzkyGolayPreprocessor(BasePreprocessor):
 ## Benefícios da Arquitetura V2
 
 ### Comprehensibility
-- **Estrutura clara** que qualquer desenvolvedor pode entender
+- **Estrutura clara** facilitando a compreensão por novos devs
 - **Nomenclatura consistente** e descritiva
 - **Documentação completa** com exemplos de uso
 - **Separação lógica** de responsabilidades
 
 ### Maintainability
 - **Mudanças localizadas** não afetam o sistema inteiro
-- **Testes unitários** possíveis para cada componente
 - **Debugging facilitado** com responsabilidades isoladas
 - **Evolução incremental** sem quebrar funcionalidades existentes
 
