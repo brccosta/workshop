@@ -48,7 +48,7 @@ Python/v2/
   from chemometrics.modeling import PLSRegressor
   from chemometrics.utils import DataSplitter
   ```
-- **Classes orientadas a objetos** com interfaces consistentes (`chemometrics/preprocessing.py`)
+- **Classes orientadas a objetos** com interfaces consistentes (`sodium_analysis.py`)
   ```python
   # Interface consistente: todos os preprocessadores seguem o mesmo padrão
   snv = SNVPreprocessor(plot=plot)
