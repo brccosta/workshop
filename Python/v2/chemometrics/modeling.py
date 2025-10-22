@@ -2,7 +2,7 @@
 Módulo de modelagem quimiométrica.
 
 Teste Mudança 1
-Mudança 2
+Mudança 6
 """
 
 import numpy as np
