@@ -204,30 +204,7 @@ chemometrics/
 
 ### Coding Standards and Conventions (PEP8)
 
-**Type Hints** - Anotações de tipo (`chemometrics/modeling.py`)
-```python
-from typing import Dict, List, Optional, Tuple
-
-def split_with_groups(self, X: np.ndarray, y: np.ndarray, 
-                    groups: Optional[np.ndarray] = None) -> Tuple[np.ndarray, np.ndarray]:
-    """
-    Divide os dados considerando grupos (ex: réplicas).
-    
-    Parameters
-    ----------
-    X : np.ndarray
-        Dados de entrada.
-    y : np.ndarray
-        Variável resposta.
-    groups : np.ndarray, optional
-        Grupos para divisão (ex: IDs das amostras).
-        
-    Returns
-    -------
-    tuple
-        train_idx, test_idx
-    """
-```
+**PEP8** é o guia de estilo oficial do Python que define convenções para escrever código legível e consistente. O projeto V2 segue rigorosamente essas convenções.
 
 **Naming Conventions** - PEP8 compliance (`chemometrics/preprocessing.py`)
 ```python
@@ -245,44 +222,6 @@ def _validate_input(self, X: np.ndarray) -> np.ndarray:
 
 # Constantes: UPPER_CASE
 DEFAULT_WINDOW_LENGTH = 15
-```
-
-**Error Handling** - Tratamento robusto de erros (`chemometrics/preprocessing.py`)
-```python
-def _validate_input(self, X: np.ndarray) -> np.ndarray:
-    """Valida e prepara os dados de entrada."""
-    if not isinstance(X, np.ndarray):
-        X = np.array(X, dtype=np.float64)
-    
-    if X.ndim == 1:
-        X = X.reshape(1, -1)
-        
-    if X.size == 0:
-        raise ValueError("Dados de entrada não podem estar vazios.")
-        
-    return X
-```
-
-**Documentation** - Docstrings completas (`sodium_analysis.py`)
-```python
-def load_data(file_path: str = "data/dados.xlsx") -> tuple:
-    """
-    Carrega os dados do arquivo Excel.
-    
-    Parameters
-    ----------
-    file_path : str
-        Caminho para o arquivo de dados.
-        
-    Returns
-    -------
-    tuple
-        X, y, amostras, variaveis
-    """
-    logger.info("Carregando dados...")
-    dados_brutos = pd.read_excel(file_path, sheet_name='original', header=None)
-    # ... implementação
-    return X, y, amostras, variaveis
 ```
 
 ## Comparação Arquitetural
