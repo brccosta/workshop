@@ -117,62 +117,6 @@ Python/v2/
 
 ## Principles
 
-### Design Patterns
-
-**Template Method Pattern** - `BasePreprocessor` (`chemometrics/preprocessing.py`)
-```python
-class BasePreprocessor:
-    """Classe base para pré-processadores."""
-    
-    def _validate_input(self, X: np.ndarray) -> np.ndarray:
-        """Valida e prepara os dados de entrada."""
-        if not isinstance(X, np.ndarray):
-            X = np.array(X, dtype=np.float64)
-        if X.ndim == 1:
-            X = X.reshape(1, -1)
-        if X.size == 0:
-            raise ValueError("Dados de entrada não podem estar vazios.")
-        return X
-    
-    def _plot_results(self, X_original: np.ndarray, X_processed: np.ndarray, 
-                     title: str, sample_idx: int = 1) -> None:
-        """Plota os resultados do pré-processamento."""
-        # Implementação comum para todos os preprocessadores
-```
-
-**Strategy Pattern** - Diferentes algoritmos de pré-processamento (`chemometrics/preprocessing.py`)
-```python
-class SNVPreprocessor(BasePreprocessor):
-    """Standard Normal Variate preprocessing."""
-    def transform(self, X: np.ndarray) -> np.ndarray:
-        # Estratégia SNV
-        return (X - np.mean(X, axis=1, keepdims=True)) / np.std(X, axis=1, keepdims=True, ddof=self.ddof)
-
-class SavitzkyGolayPreprocessor(BasePreprocessor):
-    """Savitzky-Golay filter preprocessing."""
-    def transform(self, X: np.ndarray) -> np.ndarray:
-        # Estratégia Savitzky-Golay
-        return savgol_filter(X, self.window_length, self.polyorder, self.deriv)
-```
-
-**Factory Pattern** - `__init__.py` como factory (`chemometrics/__init__.py`)
-```python
-# Imports principais
-from .preprocessing import *
-from .modeling import *
-from .utils import *
-
-__all__ = [
-    'SNVPreprocessor',
-    'SavitzkyGolayPreprocessor', 
-    'MSCPreprocessor',
-    'MeanCenterPreprocessor',
-    'PLSRegressor',
-    'DataSplitter',
-    'MetricsCalculator'
-]
-```
-
 ### Architectural Styles
 
 **Layered Architecture** - Separação em camadas (`sodium_analysis.py`)
