@@ -1,7 +1,8 @@
 """
 Módulo de modelagem quimiométrica.
 
-Teste
+Teste Mudança 1
+Mudança 2
 """
 
 import numpy as np
