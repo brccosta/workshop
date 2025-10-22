@@ -1,228 +1,185 @@
-# Chemometrics Library
+# Análise Quimiométrica de Dados Espectrais
 
-Uma biblioteca Python para análise quimiométrica de dados espectrais, desenvolvida seguindo as melhores práticas de Engenharia de Software e Arquitetura de Software.
+Este programa realiza análise quimiométrica de dados espectrais para determinação de sódio em amostras, utilizando técnicas de pré-processamento espectroscópico e modelagem PLS (Partial Least Squares).
 
-## Visão Geral
+## Estrutura do Projeto
 
-Esta biblioteca fornece ferramentas para:
-- **Pré-processamento espectroscópico**: SNV, Savitzky-Golay, MSC, Mean Centering, Autoscaling
-- **Modelagem quimiométrica**: Regressão PLS com otimização automática
-- **Divisão de dados**: Kennard-Stone, SPXY, divisão com grupos
-- **Avaliação**: Métricas completas e visualizações
-
-## Arquitetura do Projeto
+### V1 - Implementação Inicial
 
 ```
-workshop/
-├── chemometrics/              # Biblioteca principal
-│   ├── __init__.py           # Interface pública da biblioteca
-│   ├── preprocessing.py      # Técnicas de pré-processamento espectroscópico
-│   ├── modeling.py          # Modelos de regressão PLS
-│   └── utils.py             # Utilitários (divisão de dados, métricas)
-├── config/                   # Configurações
-│   └── settings.py          # Configurações do projeto
-├── examples/                 # Exemplos de uso
-│   └── example_sodium_analysis.py
-├── data/                     # Dados
-│   ├── dados.xlsx          # Dados espectrais originais
-│   └── README.md           # Documentação dos dados
-├── main_analysis.py         # Script principal de análise
-├── demo_usage.py            # Demonstração da biblioteca
-├── config.py                # Configurações simples
-├── requirements.txt         # Dependências
-├── setup.py                # Instalação
-└── README.md               # Documentação
+Python/v1/
+├── dados.xlsx              # Dados espectrais
+├── pls_sodio.py           # Script principal (análise completa)
+├── pretrat.py             # Funções de pré-processamento
+├── pls_model.py           # Funções de modelagem PLS
+└── splits.py              # Funções de divisão de dados
 ```
 
-### Arquivos Principais
+**Características da V1:**
+- **Estrutura procedural** com funções soltas
+- **Código monolítico** no arquivo principal (`pls_sodio.py`)
+- **Acoplamento forte** entre módulos
+- **Parâmetros hardcoded** em todo o código
+- **Sem documentação** estruturada
+- **Difícil reutilização** de componentes
 
-**Biblioteca Chemometrics**
-- `chemometrics/__init__.py`: Interface pública com todos os imports
-- `chemometrics/preprocessing.py`: SNV, Savitzky-Golay, MSC, Mean Centering, Autoscaling
-- `chemometrics/modeling.py`: Regressor PLS com otimização automática
-- `chemometrics/utils.py`: Divisão de dados e cálculo de métricas
+### V2 - Implementação Refatorada
 
-**Scripts de Uso**
-- `main_analysis.py`: Análise principal com dados reais
-- `demo_usage.py`: Demonstração com dados sintéticos
-- `examples/example_sodium_analysis.py`: Exemplo completo
-
-**Configuração**
-- `config.py`: Configurações simples
-- `config/settings.py`: Configurações avançadas
-- `requirements.txt`: Dependências Python
-- `setup.py`: Instalação da biblioteca
-
-## Instalação
-
-```bash
-# Instalar dependências
-pip install -r requirements.txt
-
-# Instalar a biblioteca em modo desenvolvimento
-pip install -e .
+```
+Python/v2/
+├── sodium_analysis.py     # Script principal modular
+├── chemometrics/          # Biblioteca quimiométrica
+│   ├── __init__.py        # Interface da biblioteca
+│   ├── preprocessing.py   # Pré-processamento espectroscópico
+│   ├── modeling.py        # Modelagem PLS
+│   └── utils.py           # Utilitários (divisão, métricas)
+├── data/                  # Dados do projeto
+│   ├── dados.xlsx
+│   └── README.md
+├── requirements.txt       # Dependências
+└── README.md             # Documentação
 ```
 
-## Uso Básico
+**Características da V2:**
+- **Arquitetura modular** com separação clara de responsabilidades
+- **Classes orientadas a objetos** com interfaces consistentes
+- **Baixo acoplamento** entre módulos
+- **Parâmetros configuráveis** e flexíveis
+- **Documentação completa** com docstrings
+- **Alta reutilização** de componentes
 
-### Carregamento e Pré-processamento
+## Comparação Arquitetural
 
+### Organization
+
+| Aspecto | V1 | V2 |
+|---------|----|----|
+| **Estrutura** | Arquivos soltos sem organização | Hierarquia clara com separação de responsabilidades |
+| **Nomenclatura** | Inconsistente (`savgol_`, `snv_`) | Padronizada (`SavitzkyGolayPreprocessor`) |
+| **Documentação** | Mínima | Completa com docstrings e README |
+
+### Folder and Directory Structure
+
+**V1 - Estrutura Plana:**
+```
+v1/
+├── pls_sodio.py    # Tudo misturado
+├── pretrat.py      # Funções soltas
+├── pls_model.py    # Funções soltas
+└── splits.py       # Funções soltas
+```
+
+**V2 - Estrutura Hierárquica:**
+```
+v2/
+├── sodium_analysis.py    # Orquestração
+├── chemometrics/        # Biblioteca reutilizável
+│   ├── preprocessing/   # Camada de pré-processamento
+│   ├── modeling/        # Camada de modelagem
+│   └── utils/          # Camada de utilitários
+└── data/               # Camada de dados
+```
+
+### Dependency Flow and Communication
+
+**V1 - Acoplamento Forte:**
 ```python
-from chemometrics import SNVPreprocessor, SavitzkyGolayPreprocessor, MeanCenterPreprocessor
+# Dependências circulares e acoplamento forte
+from pretrat import savgol_, snv_, mean_center_
+from pls_model import pls_
+from splits import split_data_
 
-# Carregar dados
-X, y = load_your_spectral_data()
+# Uso direto sem abstração
+X_p1 = savgol_(X2, width=15, order=2, deriv=1, plotar=False)
+X_p1 = snv_(X_p1, plotar=False)
+```
 
-# Pré-processamento sequencial
+**V2 - Baixo Acoplamento:**
+```python
+# Interface limpa e desacoplada
+from chemometrics import (
+    SNVPreprocessor, 
+    SavitzkyGolayPreprocessor, 
+    MeanCenterPreprocessor,
+    PLSRegressor,
+    DataSplitter
+)
+
+# Uso através de classes com interface consistente
 savgol = SavitzkyGolayPreprocessor(window_length=15, polyorder=2, deriv=1)
 X_processed = savgol.fit_transform(X)
-
-snv = SNVPreprocessor()
-X_processed = snv.fit_transform(X_processed)
-
-mean_center = MeanCenterPreprocessor()
-X_processed = mean_center.fit_transform(X_processed)
 ```
 
-### Modelagem PLS
+### Layer Separation
 
+**V1 - Sem Separação de Camadas:**
+- **Apresentação, lógica e dados** misturados no mesmo arquivo
+- **Hardcoded** em todo lugar
+- **Sem abstração** entre camadas
+
+**V2 - Separação Clara de Camadas:**
+
+| Camada | Responsabilidade | Componentes |
+|--------|------------------|-------------|
+| **Presentation** | Interface e orquestração | `sodium_analysis.py` |
+| **Business Logic** | Regras de negócio | `chemometrics/modeling.py` |
+| **Data Processing** | Pré-processamento | `chemometrics/preprocessing.py` |
+| **Utilities** | Serviços auxiliares | `chemometrics/utils.py` |
+| **Data** | Armazenamento | `data/` |
+
+### Code Modularization and Reuse
+
+**V1 - Modularização Limitada:**
 ```python
-from chemometrics import PLSRegressor, DataSplitter
+# Funções soltas sem padrão
+def savgol_(X, width=None, order=None, deriv=None, plotar=False):
+    X_smooth = savgol_filter(X, width, order, deriv)
+    return X_smooth
 
-# Dividir dados
-splitter = DataSplitter(test_size=0.3, random_state=42)
-train_idx, test_idx = splitter.split_with_groups(X, y, groups=sample_ids)
-
-X_train, X_test = X[train_idx], X[test_idx]
-y_train, y_test = y[train_idx], y[test_idx]
-
-# Treinar modelo
-model = PLSRegressor()
-model.fit(X_train, y_train, cv_folds=5, optimize_components=True)
-
-# Fazer predições
-y_pred = model.predict(X_test)
-
-# Avaliar modelo
-metrics = model.evaluate(X_train, y_train, X_test, y_test, unit='mEq/L')
-model.plot_results(X_train, y_train, X_test, y_test, unit='mEq/L')
+def snv_(X, plotar=False):
+    media_linha = np.mean(X, axis=1, keepdims=True)
+    dp_linha = np.std(X, axis=1, keepdims=True, ddof=1)
+    X_SNV = (X - media_linha) / dp_linha
+    return X_SNV
 ```
 
-### Divisão de Dados
-
+**V2 - Modularização Avançada:**
 ```python
-from chemometrics import DataSplitter
-
-splitter = DataSplitter(test_size=0.3, random_state=42)
-
-# Divisão com grupos (réplicas)
-train_idx, test_idx = splitter.split_with_groups(X, y, groups=sample_ids)
-
-# Algoritmo Kennard-Stone
-train_idx, test_idx = splitter.split_kennard_stone(X, y)
-
-# Algoritmo SPXY
-train_idx, test_idx = splitter.split_spxy(X, y)
+# Classes com interface consistente
+class SavitzkyGolayPreprocessor(BasePreprocessor):
+    def __init__(self, window_length=15, polyorder=2, deriv=1, plot=False):
+        self.window_length = window_length
+        self.polyorder = polyorder
+        self.deriv = deriv
+        super().__init__(plot=plot)
+    
+    def fit_transform(self, X):
+        X = self._validate_input(X)
+        X_processed = savgol_filter(X, self.window_length, self.polyorder, self.deriv)
+        self._plot_results(X, X_processed, "Savitzky-Golay")
+        return X_processed
 ```
 
-## Funcionalidades
+## Benefícios da Arquitetura V2
 
-### Pré-processamento Espectroscópico
+### Comprehensibility
+- **Estrutura clara** que qualquer desenvolvedor pode entender
+- **Nomenclatura consistente** e descritiva
+- **Documentação completa** com exemplos de uso
+- **Separação lógica** de responsabilidades
 
-- **SNV (Standard Normal Variate)**: Normalização por espectro
-- **Savitzky-Golay**: Filtro de suavização e derivação
-- **MSC (Multiplicative Scatter Correction)**: Correção de espalhamento
-- **Mean Centering**: Centramento na média
-- **Autoscaling**: Normalização por desvio padrão
+### Maintainability
+- **Mudanças localizadas** não afetam o sistema inteiro
+- **Testes unitários** possíveis para cada componente
+- **Debugging facilitado** com responsabilidades isoladas
+- **Evolução incremental** sem quebrar funcionalidades existentes
 
-### Modelagem
+### Scalability and Evolution
+- **Adição de novos preprocessadores** sem modificar código existente
+- **Extensão da biblioteca** com novos algoritmos
+- **Reutilização** em outros projetos de análise espectroscópica
+- **Integração** com outras bibliotecas científicas
 
-- **PLS Regressor**: Regressão PLS com otimização automática
-- **Validação cruzada**: Otimização do número de componentes
-- **VIP Scores**: Importância das variáveis
-- **Métricas completas**: R², RMSE, MAE, MAPE, Bias, RPD, RER
+## Conclusão
 
-### Divisão de Dados
-
-- **Divisão com grupos**: Considera réplicas de amostras
-- **Kennard-Stone**: Seleção baseada em distância euclidiana
-- **SPXY**: Combina distâncias em X e Y
-
-## Exemplo Completo
-
-Execute o exemplo completo de análise de sódio:
-
-```bash
-python examples/example_sodium_analysis.py
-```
-
-Este exemplo demonstra:
-1. Carregamento de dados espectrais
-2. Pré-processamento sequencial
-3. Divisão considerando réplicas
-4. Treinamento de modelo PLS
-5. Avaliação e visualização
-
-## Princípios de Arquitetura
-
-### Separação de Responsabilidades
-- Cada módulo tem uma responsabilidade específica
-- Código organizado por funcionalidade
-- `preprocessing.py`: Técnicas de pré-processamento
-- `modeling.py`: Modelos de regressão
-- `utils.py`: Utilitários auxiliares
-
-### Interface Consistente
-- Todas as classes seguem o padrão `fit()`, `transform()`, `fit_transform()`
-- Métodos padronizados para avaliação e visualização
-- API uniforme para todos os componentes
-
-### Configuração Centralizada
-- Configurações em `config/settings.py`
-- Parâmetros padrão para todos os métodos
-- Fácil customização de parâmetros
-
-### Logging e Tratamento de Erros
-- Sistema de logging configurável
-- Tratamento robusto de exceções
-- Mensagens informativas para debugging
-
-### Documentação Clara
-- Docstrings detalhadas em todas as funções
-- Exemplos práticos de uso
-- README abrangente com guias de uso
-
-### Benefícios para Aplicação Acadêmica
-1. **Modular**: Fácil de entender e modificar
-2. **Reutilizável**: Classes independentes
-3. **Extensível**: Fácil adicionar funcionalidades
-4. **Testável**: Estrutura permite testes
-5. **Documentada**: Código bem documentado
-6. **Profissional**: Segue boas práticas de engenharia de software
-
-## Dependências
-
-- `numpy>=1.21.0`: Computação numérica
-- `pandas>=1.3.0`: Manipulação de dados
-- `scikit-learn>=1.0.0`: Machine learning
-- `scipy>=1.7.0`: Computação científica
-- `matplotlib>=3.4.0`: Visualização
-- `openpyxl>=3.0.0`: Leitura de Excel
-
-## Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo LICENSE para detalhes.
-
-## Contribuição
-
-Contribuições são bem-vindas! Por favor:
-
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature
-3. Commit suas mudanças
-4. Push para a branch
-5. Abra um Pull Request
-
-## Contato
-
-Para dúvidas ou sugestões, entre em contato com a equipe de desenvolvimento.
+A V2 representa uma evolução significativa em termos de **boas práticas de desenvolvimento**, oferecendo uma arquitetura **modular**, **escalável** e **manutenível** que facilita tanto o desenvolvimento quanto a evolução do sistema.
