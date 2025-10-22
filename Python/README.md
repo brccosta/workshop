@@ -115,6 +115,176 @@ Python/v2/
   from chemometrics import DataSplitter, MetricsCalculator
   ```
 
+## Principles
+
+### Design Patterns
+
+**Template Method Pattern** - `BasePreprocessor` (`chemometrics/preprocessing.py`)
+```python
+class BasePreprocessor:
+    """Classe base para pré-processadores."""
+    
+    def _validate_input(self, X: np.ndarray) -> np.ndarray:
+        """Valida e prepara os dados de entrada."""
+        if not isinstance(X, np.ndarray):
+            X = np.array(X, dtype=np.float64)
+        if X.ndim == 1:
+            X = X.reshape(1, -1)
+        if X.size == 0:
+            raise ValueError("Dados de entrada não podem estar vazios.")
+        return X
+    
+    def _plot_results(self, X_original: np.ndarray, X_processed: np.ndarray, 
+                     title: str, sample_idx: int = 1) -> None:
+        """Plota os resultados do pré-processamento."""
+        # Implementação comum para todos os preprocessadores
+```
+
+**Strategy Pattern** - Diferentes algoritmos de pré-processamento (`chemometrics/preprocessing.py`)
+```python
+class SNVPreprocessor(BasePreprocessor):
+    """Standard Normal Variate preprocessing."""
+    def transform(self, X: np.ndarray) -> np.ndarray:
+        # Estratégia SNV
+        return (X - np.mean(X, axis=1, keepdims=True)) / np.std(X, axis=1, keepdims=True, ddof=self.ddof)
+
+class SavitzkyGolayPreprocessor(BasePreprocessor):
+    """Savitzky-Golay filter preprocessing."""
+    def transform(self, X: np.ndarray) -> np.ndarray:
+        # Estratégia Savitzky-Golay
+        return savgol_filter(X, self.window_length, self.polyorder, self.deriv)
+```
+
+**Factory Pattern** - `__init__.py` como factory (`chemometrics/__init__.py`)
+```python
+# Imports principais
+from .preprocessing import *
+from .modeling import *
+from .utils import *
+
+__all__ = [
+    'SNVPreprocessor',
+    'SavitzkyGolayPreprocessor', 
+    'MSCPreprocessor',
+    'MeanCenterPreprocessor',
+    'PLSRegressor',
+    'DataSplitter',
+    'MetricsCalculator'
+]
+```
+
+### Architectural Styles
+
+**Layered Architecture** - Separação em camadas (`sodium_analysis.py`)
+```python
+# Camada de Apresentação (Presentation Layer)
+def main():
+    """Função principal da análise."""
+    X, y, amostras, variaveis = load_data()  # Camada de Dados
+    
+    X_processed = preprocess_data(X, plot=False)  # Camada de Processamento
+    
+    X_train, X_test, y_train, y_test, train_idx, test_idx = split_data(
+        X_processed, y, amostras  # Camada de Utilitários
+    )
+    
+    model = train_model(X_train, y_train)  # Camada de Modelagem
+    
+    metrics = evaluate_model(model, X_train, y_train, X_test, y_test)  # Camada de Avaliação
+```
+
+**Modular Architecture** - Módulos independentes
+```
+chemometrics/
+├── preprocessing.py   # Módulo de pré-processamento
+├── modeling.py       # Módulo de modelagem  
+├── utils.py          # Módulo de utilitários
+└── __init__.py       # Interface unificada
+```
+
+### Coding Standards and Conventions (PEP8)
+
+**Type Hints** - Anotações de tipo (`chemometrics/modeling.py`)
+```python
+from typing import Dict, List, Optional, Tuple
+
+def split_with_groups(self, X: np.ndarray, y: np.ndarray, 
+                    groups: Optional[np.ndarray] = None) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Divide os dados considerando grupos (ex: réplicas).
+    
+    Parameters
+    ----------
+    X : np.ndarray
+        Dados de entrada.
+    y : np.ndarray
+        Variável resposta.
+    groups : np.ndarray, optional
+        Grupos para divisão (ex: IDs das amostras).
+        
+    Returns
+    -------
+    tuple
+        train_idx, test_idx
+    """
+```
+
+**Naming Conventions** - PEP8 compliance (`chemometrics/preprocessing.py`)
+```python
+# Classes: PascalCase
+class SNVPreprocessor(BasePreprocessor):
+    """Standard Normal Variate preprocessing."""
+
+# Métodos: snake_case
+def fit_transform(self, X: np.ndarray) -> np.ndarray:
+    """Aplica SNV aos dados."""
+
+# Atributos privados: underscore prefix
+def _validate_input(self, X: np.ndarray) -> np.ndarray:
+    """Valida e prepara os dados de entrada."""
+
+# Constantes: UPPER_CASE
+DEFAULT_WINDOW_LENGTH = 15
+```
+
+**Error Handling** - Tratamento robusto de erros (`chemometrics/preprocessing.py`)
+```python
+def _validate_input(self, X: np.ndarray) -> np.ndarray:
+    """Valida e prepara os dados de entrada."""
+    if not isinstance(X, np.ndarray):
+        X = np.array(X, dtype=np.float64)
+    
+    if X.ndim == 1:
+        X = X.reshape(1, -1)
+        
+    if X.size == 0:
+        raise ValueError("Dados de entrada não podem estar vazios.")
+        
+    return X
+```
+
+**Documentation** - Docstrings completas (`sodium_analysis.py`)
+```python
+def load_data(file_path: str = "data/dados.xlsx") -> tuple:
+    """
+    Carrega os dados do arquivo Excel.
+    
+    Parameters
+    ----------
+    file_path : str
+        Caminho para o arquivo de dados.
+        
+    Returns
+    -------
+    tuple
+        X, y, amostras, variaveis
+    """
+    logger.info("Carregando dados...")
+    dados_brutos = pd.read_excel(file_path, sheet_name='original', header=None)
+    # ... implementação
+    return X, y, amostras, variaveis
+```
+
 ## Comparação Arquitetural
 
 ### Organization
