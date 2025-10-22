@@ -1,8 +1,6 @@
 """
-Módulo de modelagem quimiométrica.
+Módulo de modelagem quimiométrica. Teste de Workshop
 
-Teste Mudança 1
-Mudança 5
 """
 
 import numpy as np
