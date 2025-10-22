@@ -39,6 +39,14 @@ Para verificar se tudo foi instalado corretamente:
 python -c "import numpy, pandas, sklearn, matplotlib, seaborn; print('Dependências instaladas com sucesso!')"
 ```
 
+### 4. Executar o Projeto
+
+Para rodar a análise quimiométrica:
+
+```bash
+python sodium_analysis.py
+```
+
 ## Estrutura do Projeto
 
 ### V1 - Implementação Inicial
