@@ -3,7 +3,7 @@ function model = modeling(X, y, method, varargin)
 %
 % Sintaxe:
 %   model = modeling(X, y, method)
-%   model = modeling(X, y, method, 'Name', Value)
+%   model = modeling(X, y, method, 'Name__', Value)
 %
 % Parâmetros:
 %   X - Dados de entrada (amostras x variáveis)
