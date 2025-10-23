@@ -1,5 +1,5 @@
 """
-Módulo de pré-processamento espectroscópico.
+Módulo de pré-processamento espectroscópico. Mensagem 1
 """
 
 import numpy as np
